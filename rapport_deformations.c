@@ -4,6 +4,8 @@
 
 static clock_t temps_cpu;
 
+// coucou
+
 void redemarrer_chronometre()
 {
     temps_cpu = clock();
@@ -97,7 +99,7 @@ Position* simuler_deformations(Position nombre_positions,
                 paquet[i] = position_distr_triang(centre, largeur);
             }
         }else if (simulation == BIMODALE){
-            /* deux distributions triangulaires centrées sur les positions en 
+            /* deux distributions triangulaires centrées sur les positions en
              * premier et troisième quartile, largeur huitième */
             int largeur = nombre_positions/8;
             for (i = 0; i < nombre_deformations; i++){
@@ -123,5 +125,5 @@ Position* simuler_deformations(Position nombre_positions,
 
 void detruire_deformations(Position* paquet)
 {
-    free(paquet); 
+    free(paquet);
 }
