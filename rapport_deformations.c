@@ -4,7 +4,7 @@
 
 static clock_t temps_cpu;
 
-// coucou
+// coucou !
 
 void redemarrer_chronometre()
 {
