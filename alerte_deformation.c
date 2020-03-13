@@ -3,7 +3,6 @@
 #include <stdio.h>
 #define LONGUEUR_CABLE 100000 /* en m */
 #define NOMBRE_DEFORMATIONS 100000 /* en nombre de déformations */
-#define PAS_VOISIN
 
 /**
         On simule des déformations sur un clable de longueur donnée et de précision donnée
@@ -17,6 +16,9 @@
 
 int main()
 {
+    //printf("debut");
+    //fflush(stdout);
+
     /* paramètres */
     int nombre_positions = LONGUEUR_CABLE/PRECISION;
     int nombre_deformations = NOMBRE_DEFORMATIONS;
@@ -37,6 +39,7 @@ int main()
     for (int i = 0; i < nombre_deformations; i++) //écriture dans le fichier
     {
         fprintf(file, "%i ", paquet[i]);
+        //printf("paquet %i  ",paquet[i]);
     }
     fclose(file); //fermeture du fichier
     printf("terminee.\n");
@@ -47,23 +50,46 @@ int main()
     //detruire_deformations(paquet);
 
     /** premiere version **/
-/**
-    redemarrer_chronometre(); //démarache du chronomètre pour calculer le temps d'une possible alerte
-    int tab_position[LONGUEUR_CABLE];
+    /** valeur limite longueur 100 000 nb deformation 100 000 **/
 
-    for(long position =0; position<LONGUEUR_CABLE; position++)
+    redemarrer_chronometre(); //démarache du chronomètre pour calculer le temps d'une possible alerte
+    int* tab_position;//passer en dynamique
+    tab_position = malloc(LONGUEUR_CABLE * sizeof(int));
+    for(int position =0; position<LONGUEUR_CABLE; position++)
     {
         tab_position[position] =0;
-        for (long deformation =0; deformation<NOMBRE_DEFORMATIONS; deformation++)
+        for (int deformation =0; deformation<NOMBRE_DEFORMATIONS; deformation++)
         {
             if (paquet[deformation] == position)
                 tab_position[position] = tab_position[position] + 1;
         }
-        printf("position %i nb deformation %i \n",position,tab_position[position]);
+        //printf("position %i nb deformation %i \n",position,tab_position[position]);
+    }
+
+    int somme, min, max;
+    for(int position =0; position<LONGUEUR_CABLE; position++)
+    {
+        somme =0;
+
+        if (position>LONGUEUR_CABLE - DIST_MAX_VOISIN - 1)
+            max =LONGUEUR_CABLE-1;
+        else
+            max = position + DIST_MAX_VOISIN;
+
+        if (position<DIST_MAX_VOISIN)
+            min =0;
+        else
+            min =position - DIST_MAX_VOISIN;
+
+        for(int i =min; i<=max;i++)
+            somme = somme + tab_position[i];
+
+        if (somme >= SEUIL_ALERTE)
+            printf("ALERTE SUR LA POSITION %i avec %i deformation\n",position,somme);
     }
 
     temps_ecoule = relever_chronometre_ms(); //on recuperrer le temps écoulé pour cette version
     printf("Temps ecoule premiere version : %i ms.\n", temps_ecoule);
-**/
+
     return 0;
 }
