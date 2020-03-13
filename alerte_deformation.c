@@ -47,7 +47,7 @@ int main()
     //detruire_deformations(paquet);
 
     /** premiere version **/
-
+/**
     redemarrer_chronometre(); //démarache du chronomètre pour calculer le temps d'une possible alerte
     int tab_position[LONGUEUR_CABLE];
 
@@ -64,6 +64,6 @@ int main()
 
     temps_ecoule = relever_chronometre_ms(); //on recuperrer le temps écoulé pour cette version
     printf("Temps ecoule premiere version : %i ms.\n", temps_ecoule);
-
+**/
     return 0;
 }
