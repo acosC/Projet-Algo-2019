@@ -1,8 +1,8 @@
 #include "rapport_deformations.h"
 #include <stdlib.h>
 #include <stdio.h>
-#define LONGUEUR_CABLE 1000 /* en m */
-#define NOMBRE_DEFORMATIONS 100 /* en nombre de d�formations */
+#define LONGUEUR_CABLE 10000 /* en m */
+#define NOMBRE_DEFORMATIONS 50000 /* en nombre de d�formations */
 #define PAS_VOISIN
 
 /**
@@ -34,7 +34,7 @@ int main()
 
     /** deuxième version **/
   int i=0;
-  int position,position2,max,min,k,limite_deformation;
+  int position,position2,max,min,k,limite_deformation=0;
   printf("c'est chiant.\n");
   for(i=0;i<LONGUEUR_CABLE;i++)
   {
@@ -53,8 +53,8 @@ int main()
       if ((min<position2) && (position2<max))
       {
         limite_deformation++;
-        if (limite_deformation =100)
-          printf("Alerte : position%i\n",i);
+        if (limite_deformation ==100)
+          printf("Alerte : position %i\n",i);
       }
     }
   }
