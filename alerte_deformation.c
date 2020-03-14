@@ -1,7 +1,7 @@
 #include "rapport_deformations.h"
 #include <stdlib.h>
 #include <stdio.h>
-#define LONGUEUR_CABLE 100000 /* en m */
+#define LONGUEUR_CABLE 1000000 /* en m */
 #define NOMBRE_DEFORMATIONS 100000 /* en nombre de déformations */
 
 /**
@@ -9,6 +9,7 @@
         On définie le nombre de déformation que l'on veut
         Les déformation sont répartie, en fonction d'une loi, sur l'ensemble des positions du cable
         Pour chaque déformation une position sera atribué
+        ainsi la fonction simuler_deformations renvoi un tableau des déformations en fonction des positions
         l'alerte est donné si il y a 100 déformations pour une position et les positions voisine
         Deux positions sont voisine si elle sont distante de 100m ou moins
         Soit si pos(200) est étudié, toute les position comprise entre pos(100) et pos(300) sont voisine
@@ -49,24 +50,31 @@ int main()
 
     //detruire_deformations(paquet);
 
-    /** premiere version **/
-    /** valeur limite longueur 100 000 nb deformation 100 000 **/
+
+    /** troisieme version **/
+    /** optimisation de la création du tableau du nombre de déformation en fontion des position */
 
     redemarrer_chronometre(); //démarache du chronomètre pour calculer le temps d'une possible alerte
-    int* tab_position;//passer en dynamique
+
+    int* tab_position;//utilisation d'une allocation dynamique pour gérer une grande quantité de valeur
     tab_position = malloc(LONGUEUR_CABLE * sizeof(int));
-    for(int position =0; position<LONGUEUR_CABLE; position++)
-    {
+
+    /*  création d'un tableau de transfère
+        tab_position est tableau des positions en fonction des déformations
+        pour chaque position on a le nombre de déformation
+    */
+    for (int position =0; position<LONGUEUR_CABLE; position++)
         tab_position[position] =0;
-        for (int deformation =0; deformation<NOMBRE_DEFORMATIONS; deformation++)
-        {
-            if (paquet[deformation] == position)
-                tab_position[position] = tab_position[position] + 1;
-        }
-        //printf("position %i nb deformation %i \n",position,tab_position[position]);
+
+    for (int deformation =0; deformation < NOMBRE_DEFORMATIONS; deformation++)
+    {
+        tab_position[paquet[deformation]] = tab_position[paquet[deformation]] + 1;
     }
 
-    int somme, min, max;
+    /*  détection des alertes
+        pour chaque position on calcul un min et un max qui représente les deux voisin extréma
+    */
+    int somme,somme_alerte=0, min, max;
     for(int position =0; position<LONGUEUR_CABLE; position++)
     {
         somme =0;
@@ -85,11 +93,14 @@ int main()
             somme = somme + tab_position[i];
 
         if (somme >= SEUIL_ALERTE)
-            printf("ALERTE SUR LA POSITION %i avec %i deformation\n",position,somme);
+            somme_alerte++;
     }
 
     temps_ecoule = relever_chronometre_ms(); //on recuperrer le temps écoulé pour cette version
-    printf("Temps ecoule premiere version : %i ms.\n", temps_ecoule);
+    printf("Temps ecoule troisieme version : %i ms.\n", temps_ecoule);
+    printf("nb d'alerte : %i\n",somme_alerte);
+    free(tab_position);
 
+free(paquet);
     return 0;
 }
