@@ -9,6 +9,7 @@ void redemarrer_chronometre();
 int relever_chronometre_ms();  /* en millisecondes */
 
 void Premiere_version(Position * paquet,const char* nom_fichier);
+void Deuxieme_version(Position * paquet,const char* nom_fichier);
 void Troisieme_version(Position * paquet,const char* nom_fichier);
 
 #endif // FONCTION_H_INCLUDED

@@ -18,7 +18,7 @@ int main()
 {
     int choix =0;
     int nombre_positions = LONGUEUR_CABLE/PRECISION;
-    Simulation simulation = UNIFORME; //type de loi suivie pour la simulation
+    Simulation simulation = BIMODALE; //type de loi suivie pour la simulation
 
     /** simulation des déformation **/
     Position* paquet = simuler_deformations(nombre_positions,NOMBRE_DEFORMATIONS, simulation);
@@ -41,9 +41,10 @@ int main()
             Premiere_version(paquet,"rapport_premiere_version.dat");
             break;
         case 2:
+            Deuxieme_version(paquet,"rapport_deuxieme_version.dat");
             break;
         case 3:
-            Troisieme_version(paquet,"rapport_deuxieme_version.dat");
+            Troisieme_version(paquet,"rapport_troisieme_version.dat");
             break;
         case 4:
             break;
