@@ -1,35 +1,33 @@
-#include <time.h> /* pour la mesure du temps de calcul */
-#define PRECISION 1 /* en m */
-#define DIST_MAX_VOISIN 100 /* en m */
-#define SEUIL_ALERTE 100 /* en nombre de d√©formations */
+#ifndef RAPPORT_DEFORMATIONS_H_INCLUDED
+#define RAPPORT_DEFORMATIONS_H_INCLUDED
 
-/** trie **/
+#include "parametres.h"
 
-void permuter(int *a, int *b);
-void triRapid(int tab[], int first, int last);
-/***  mesure du temps de calcul  ***/
-void redemarrer_chronometre();
-int relever_chronometre_ms();  /* en millisecondes */
-
-/***  simulation d'un paquet de deformations  ***/
 typedef int Position; //une position est un entier
-/* diff√©rentes configurations des d√©formations */
 
-typedef enum Simulation {UNIFORME, MONOMODALE, BIMODALE, QUASIMONOTONE};
+/* diffÈrentes configurations des dÈformations */
+enum Simulation {UNIFORME, MONOMODALE, BIMODALE, QUASIMONOTONE};
 typedef enum Simulation Simulation;
 
-/* Simulation proprement dite
+double distribution_triangulaire();
+Position position_distr_triang(Position centre, int largeur);
+int distribuer_pivot(Position* positions, int n);
+void transf_quasi_monotone(Position* deformations, int nombre_deformations,int arret);
+
+/** simulation d'un paquet de deformations
  *
  *     ENTREES
  * nombres_positions : le nombre de positions possibles (les positions sont
- *     rep√©r√©es par des entiers entre 0 et nombre_positions - 1)
- * nombre_deformations : le nombre de d√©formations simul√©es
- * simulation : configuration des d√©formations consid√©r√©es
+ *     repÈrÈes par des entiers entre 0 et nombre_positions - 1)
+ * nombre_deformations : le nombre de dÈformations simulÈes
+ * simulation : configuration des dÈformations considÈrÈes
  *
  *     SORTIE
- * pointeur sur un paquet de deformations, c'est-√†-dire un tableau de positions
- * comprises entre 0 et nombres_positions - 1, de taille nombre_deformations */
+ * pointeur sur un paquet de deformations, c'est-‡-dire un tableau de positions
+ * comprises entre 0 et nombres_positions - 1, de taille nombre_deformations
+ **/
 Position* simuler_deformations(Position nombre_positions,int nombre_deformations, Simulation simulation);
 
-/* Lib√®re la m√©moire utilis√©e par un paquet de d√©formations */
-void detruire_deformations(Position* paquet);
+void rapport (Position * paquet,const char* nom_fichier);
+
+#endif // RAPPORT_DEFORMATIONS_H_INCLUDED

@@ -2,51 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/** trie d'un tableau par ordre croaissant **/
-/** source internet : https://waytolearnx.com/2019/08/tri-rapide-en-c.html **/
-void permuter(int *a, int *b)
-{
-    int tmp;
-    tmp = *a;
-    *a = *b;
-    *b = tmp;
-}
-void triRapid(int tab[], int first, int last)
-{
-    int pivot, i, j;
-    if(first < last)
-    {
-        pivot = first;
-        i = first;
-        j = last;
-        while (i < j)
-        {
-            while(tab[i] <= tab[pivot] && i < last)
-                i++;
-            while(tab[j] > tab[pivot])
-                j--;
-            if(i < j) {
-                permuter(&tab[i], &tab[j]);
-            }
-        }
-        permuter(&tab[pivot], &tab[j]);
-        triRapid(tab, first, j - 1);
-        triRapid(tab, j + 1, last);
-    }
-}
-
-static clock_t temps_cpu;
-
-void redemarrer_chronometre()
-{
-    temps_cpu = clock();
-}
-
-int relever_chronometre_ms()
-{
-    return (clock() - temps_cpu)/((double) CLOCKS_PER_SEC)*1000;
-}
-
 /** tire aléatoirement une valeur réelle selon une distribution triangulaire centrée en 1/2 et de largeur 1 **/
 double distribution_triangulaire()
 {
@@ -106,9 +61,12 @@ void transf_quasi_monotone(Position* deformations, int nombre_deformations,int a
     transf_quasi_monotone(deformations + i, nombre_deformations - i, arret);
 }
 
-/***  on chi ***/
+/** simulation des déformation **/
+
 Position* simuler_deformations(Position nombre_positions,int nombre_deformations, Simulation simulation)
 {
+    printf("Simulation de %i deformations sur %i positions, configuration %i... ",NOMBRE_DEFORMATIONS, nombre_positions, simulation);
+
     Position* paquet = malloc(sizeof(Position)*nombre_deformations);
     if (!paquet)
     {
@@ -156,12 +114,22 @@ Position* simuler_deformations(Position nombre_positions,int nombre_deformations
         fprintf(stderr, "Configuration %i invalide.\n", simulation);
         exit(EXIT_FAILURE);
     }
+    printf("termine.\n");
 
     return paquet;
 }
 
-
-void detruire_deformations(Position* paquet)
+/** édition du rapport dans un fichier **/
+void rapport (Position * tab,const char* nom_fichier)
 {
-    free(paquet);
+    printf("Ecriture du paquet de deformations dans %s... ", nom_fichier);
+
+    FILE* file = fopen(nom_fichier, "w"); // création du fichier qui va contenir les positions des déformations
+    for (int i = 0; i < NOMBRE_DEFORMATIONS; i++) //écriture dans le fichier
+    {
+        fprintf(file, "%i ", tab[i]);
+    }
+    fclose(file); //fermeture du fichier
+
+    printf("terminee.\n");
 }
