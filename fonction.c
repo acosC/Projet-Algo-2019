@@ -18,8 +18,8 @@ int relever_chronometre_ms()
 /** temps de création du tableau tab_position beaucoup trop long au dela de la limite **/
 void Premiere_version(Position * paquet,const char* nom_fichier)
 {
-    redemarrer_chronometre(); //démarache du chronomètre pour calculer le temps d'une possible alerte
-    printf("premiere version en cours d'execution...");
+    redemarrer_chronometre(); //démarage du chronomètre pour calculer le temps
+    printf("premiere version en cours d'execution...\n");
 
     int temps_ecoule;
     int* tab_position = malloc(LONGUEUR_CABLE * sizeof(int));//utilisation d'une allocation dynamique pour gérer une grande quantité de valeur
@@ -27,7 +27,7 @@ void Premiere_version(Position * paquet,const char* nom_fichier)
     /* création d'un tableau de transfère */
     /* tab_position est tableau des déformation en fonction des positions */
     /* pour chaque position on a le nombre de déformation en cette position */
-    /* c'est cette étape qui prend le plus de temps car on parcours 1 000 000 de fois 100 000 déformation */
+    /* c'est cette étape qui prend le plus de temps car on parcours LONGUEUR_CABLE de fois NOMBRE_DEFORMATIONS déformation */
 
     for(int position =0; position<LONGUEUR_CABLE; position++)
     {
@@ -42,7 +42,7 @@ void Premiere_version(Position * paquet,const char* nom_fichier)
     /* détection des alertes */
     /* pour chaque position on calcul un min et un max qui représente les deux voisin extréma */
     /* création d'un rapport d'alerte */
-    FILE* file = fopen(nom_fichier, "w");
+    FILE* file = fopen(nom_fichier, "w+");
     int somme,somme_alerte=0, min, max;
     for(int position =0; position<LONGUEUR_CABLE; position++)//on parcours le tableau créé au dessus
     {
@@ -82,12 +82,13 @@ void Premiere_version(Position * paquet,const char* nom_fichier)
 void Deuxieme_version(Position * paquet,const char* nom_fichier)
 {
     redemarrer_chronometre();
-    printf("seconde version en cours d'execution...");
+    printf("deuxieme version en cours d'execution...\n");
 
     int temps_ecoule;
-    int *tab_position = malloc(LONGUEUR_CABLE * sizeof(int));//utilisation d'une allocation dynamique pour gérer une grande quantité de valeur
+
+    int *tab_position = malloc(LONGUEUR_CABLE * sizeof(int)); //utilisation d'une allocation dynamique pour gérer une grande quantité de valeur
     int x,s;
-    int nbre_alertes;
+    int nbre_alertes = 0;
     int min,max;
 
 
@@ -105,7 +106,7 @@ void Deuxieme_version(Position * paquet,const char* nom_fichier)
 
             // On définit un intervalle de valeurs dans lequel les déformations compteront.
 
-            if ( x >LONGUEUR_CABLE - DIST_MAX_VOISIN - 1)
+            if ( x > (LONGUEUR_CABLE - DIST_MAX_VOISIN - 1))
                 max = LONGUEUR_CABLE ;  // car les cases vont de 0 à long LONGUEUR_CABLE-1 soit LONGUEUR_CABLE case
             else
                 max = x + DIST_MAX_VOISIN;
@@ -132,20 +133,20 @@ void Deuxieme_version(Position * paquet,const char* nom_fichier)
     }
 
     // On affiche les points pour lesquels il y a une alerte.
-    FILE* file = fopen(nom_fichier, "w");
+    FILE* file = fopen(nom_fichier, "w+");
 
-    for(int k =0; k < LONGUEUR_CABLE; k++){
-        if (tab_position[k]==1){
+    for(int k =0; k < LONGUEUR_CABLE; k++)
+    {
+        if (tab_position[k] ==1 )
+        {
             fprintf(file,"Alerte : Trop de déformations au point %i\n",k );
-            nbre_alertes = nbre_alertes++;
+            nbre_alertes ++;
         }
-    fclose(file);
     }
-
+    fclose(file);
     // On affiche le nombre d'alertes.
 
-    printf("nombre d'alertes : %i", nbre_alertes);
-
+    printf("nombre d'alertes : %i\n", nbre_alertes);
 
     printf("termine\n");
 
@@ -155,53 +156,54 @@ void Deuxieme_version(Position * paquet,const char* nom_fichier)
 
 /** TROISIEME VERSION **/
 /** optimisation de la PREMIERE VERSION */
-void Troisieme_version(Position * paquet,const char* nom_fichier)
+void Troisieme_version(Position * paquet, const char* nom_fichier)
 {
-    redemarrer_chronometre(); //démarache du chronomètre pour calculer le temps d'une possible alerte
+    redemarrer_chronometre(); //démarage du chronomètre pour calculer le temps
 
-    printf("troisieme version en cours d'execution\n");
+    printf("troisieme version en cours d'execution...\n");
 
     int temps_ecoule;
-    int* tab_position = malloc(LONGUEUR_CABLE * sizeof(int));//utilisation d'une allocation dynamique pour gérer une grande quantité de valeur
+    register int* tab_position = malloc(LONGUEUR_CABLE * sizeof(int));//utilisation d'une allocation dynamique pour gérer une grande quantité de valeur
 
     /* création d'un tableau de transfère */
     /* tab_position est tableau des déformation en fonction des positions */
     /* pour chaque position on a le nombre de déformation en cette position */
     /* optimiser par rapport à la PREMIERE VERSION */
-
     for (int position =0; position<LONGUEUR_CABLE; position++) //on initilaise à 0 par sécurité
-        tab_position[position] =0;
+        tab_position[position] = 0;
 
     for (int deformation =0; deformation < NOMBRE_DEFORMATIONS; deformation++)
     {
-        tab_position[paquet[deformation]]++; //paquet[deformation] est une position donc on parcours le paquet de déformation pour chaque position lu on ajoute +1 à la position corespondante
+        tab_position[paquet[deformation]] ++; //paquet[deformation] est une position donc on parcours le paquet de déformation pour chaque position lu on ajoute +1 à la position correspondante
     }
 
     /* détection des alertes */
     /* pour chaque position on calcul un min et un max qui représente les deux voisin extréma */
     /* crétion d'un rapport d'alerte */
-    /* identique à la premiere version */
-    FILE* file = fopen(nom_fichier, "w");
-    int somme,somme_alerte=0, min, max;
-    for(int position =0; position<LONGUEUR_CABLE; position++)
-    {
-        somme =0;
+    /* identique à la PREMIERE version */
+    FILE* file = fopen(nom_fichier, "w+");
 
-        if (position>LONGUEUR_CABLE - DIST_MAX_VOISIN - 1)
-            max =LONGUEUR_CABLE-1;
+    int somme, somme_alerte = 0, min, max;
+
+    for(int position = 0; position < LONGUEUR_CABLE; position++)
+    {
+        somme = 0;
+
+        if (position > (LONGUEUR_CABLE - DIST_MAX_VOISIN - 1))
+            max = LONGUEUR_CABLE - 1;
         else
             max = position + DIST_MAX_VOISIN;
 
-        if (position<DIST_MAX_VOISIN)
-            min =0;
+        if (position < DIST_MAX_VOISIN)
+            min = 0;
         else
-            min =position - DIST_MAX_VOISIN;
+            min = position - DIST_MAX_VOISIN;
 
-        for(int i =min; i<=max;i++)
-            somme = somme + tab_position[i];
+        for(int i = min; i<= max; i++)
+            somme = somme + tab_position[i]; // tab_position[i] == le nombre de déformation en un point
 
         /* edition du rapport */
-        if(somme>SEUIL_ALERTE)
+        if(somme > SEUIL_ALERTE)
         {
             somme_alerte++;
             fprintf(file,"alerte position %i avec %i deformation\n",position,somme);
