@@ -17,33 +17,33 @@
 int main()
 {
     int choix =0;
-    int nombre_positions = LONGUEUR_CABLE/PRECISION;
+    register int nombre_positions = LONGUEUR_CABLE/PRECISION;
     Simulation simulation = BIMODALE; //type de loi suivie pour la simulation
 
     /** simulation des déformation **/
-    Position* paquet = simuler_deformations(nombre_positions,NOMBRE_DEFORMATIONS, simulation);
+    register Position* paquet = simuler_deformations(nombre_positions,NOMBRE_DEFORMATIONS, simulation);
     rapport(paquet,"simulation_deformations.dat"); //ecriture des positions pour chaque déformation dans un fichier
 
+    /** menu **/
     while(choix != 4)
     {
-        /** menu **/
         printf("\nquel version souhaitez vous executer?\n");
         printf("[1] premiere version\n");
         printf("[2] deuxieme version\n");
         printf("[3] troisieme version\n");
-        printf("[3] exit\n");
+        printf("[4] exit\n");
         scanf(" %i",&choix);
 
         switch(choix)
         {
         case 1:
-            Premiere_version(paquet,"rapport_premiere_version.dat");
+            Premiere_version(paquet, "rapport_premiere_version.dat");
             break;
         case 2:
-            Deuxieme_version(paquet,"rapport_deuxieme_version.dat");
+            Deuxieme_version(paquet, "rapport_deuxieme_version.dat");
             break;
         case 3:
-            Troisieme_version(paquet,"rapport_troisieme_version.dat");
+            Troisieme_version(paquet, "rapport_troisieme_version.dat");
             break;
         case 4:
             break;
