@@ -29,10 +29,10 @@ void Premiere_version(Position * paquet,const char* nom_fichier)
     /* pour chaque position on a le nombre de déformation en cette position */
     /* c'est cette étape qui prend le plus de temps car on parcours LONGUEUR_CABLE de fois NOMBRE_DEFORMATIONS déformation */
 
-    for(int position =0; position<LONGUEUR_CABLE; position++)
+    for(int position =0; position < LONGUEUR_CABLE; position++)
     {
-        tab_position[position] =0;
-        for (int deformation =0; deformation<NOMBRE_DEFORMATIONS; deformation++)
+        tab_position[position] = 0;
+        for (int deformation = 0; deformation < NOMBRE_DEFORMATIONS; deformation++)
         {
             if (paquet[deformation] == position)
                 tab_position[position] = tab_position[position] + 1;
@@ -97,7 +97,7 @@ void Deuxieme_version(Position * paquet,const char* nom_fichier)
         tab_position[a]=2;
 
 
-    for(int i =0; i < NOMBRE_DEFORMATIONS; i++) // On parcourt une première fois le tableau
+    for(int i = 0; i < NOMBRE_DEFORMATIONS; i++) // On parcourt une première fois le tableau
     {
         x = paquet [i]; // La variable x prend une déformation
 
@@ -111,27 +111,27 @@ void Deuxieme_version(Position * paquet,const char* nom_fichier)
             else
                 max = x + DIST_MAX_VOISIN;
 
-            if ( x <DIST_MAX_VOISIN)   //pour éviter que le min soit au en dessous de 0 car impossible
+            if ( x < DIST_MAX_VOISIN)   //pour éviter que le min soit au en dessous de 0 car impossible
                 min =0;
             else
                 min = x - DIST_MAX_VOISIN;
 
+                s = 0;
             for (int j =0; j < NOMBRE_DEFORMATIONS; j++) // On parcourt une seconde fois le tableau
             {
-                if ((paquet[j]>=min)&&(paquet[j]<=max)){ // Si une déformation se situe dans l'intervalle défini,
+                if ((paquet[j] >= min)&&(paquet[j] <= max)){ // Si une déformation se situe dans l'intervalle défini,
 
                     s=s+1;
-                    if (s>=SEUIL_ALERTE)
-                        tab_position[x]=1;
+                    if (s >= SEUIL_ALERTE)
+                        tab_position[x] = 1;
                     else
-                        tab_position[x]=0;
+                        tab_position[x] = 0;
                 }
             }
 
         }
 
     }
-
     // On affiche les points pour lesquels il y a une alerte.
     FILE* file = fopen(nom_fichier, "w+");
 
@@ -163,16 +163,16 @@ void Troisieme_version(Position * paquet, const char* nom_fichier)
     printf("troisieme version en cours d'execution...\n");
 
     int temps_ecoule;
-    register int* tab_position = malloc(LONGUEUR_CABLE * sizeof(int));//utilisation d'une allocation dynamique pour gérer une grande quantité de valeur
+    register int * tab_position = malloc(LONGUEUR_CABLE * sizeof(int));//utilisation d'une allocation dynamique pour gérer une grande quantité de valeur
 
     /* création d'un tableau de transfère */
     /* tab_position est tableau des déformation en fonction des positions */
     /* pour chaque position on a le nombre de déformation en cette position */
     /* optimiser par rapport à la PREMIERE VERSION */
-    for (int position =0; position<LONGUEUR_CABLE; position++) //on initilaise à 0 par sécurité
+    for (int position = 0; position < LONGUEUR_CABLE; position++) //on initilaise à 0 par sécurité
         tab_position[position] = 0;
 
-    for (int deformation =0; deformation < NOMBRE_DEFORMATIONS; deformation++)
+    for (int deformation = 0; deformation < NOMBRE_DEFORMATIONS; deformation++)
     {
         tab_position[paquet[deformation]] ++; //paquet[deformation] est une position donc on parcours le paquet de déformation pour chaque position lu on ajoute +1 à la position correspondante
     }
@@ -199,14 +199,14 @@ void Troisieme_version(Position * paquet, const char* nom_fichier)
         else
             min = position - DIST_MAX_VOISIN;
 
-        for(int i = min; i<= max; i++)
+        for(int i = min; i <= max; i++)
             somme = somme + tab_position[i]; // tab_position[i] == le nombre de déformation en un point
 
         /* edition du rapport */
         if(somme > SEUIL_ALERTE)
         {
             somme_alerte++;
-            fprintf(file,"alerte position %i avec %i deformation\n",position,somme);
+            fprintf(file, "alerte position %i avec %i deformation\n", position, somme);
         }
     }
     fclose(file); //fermeture du fichier
