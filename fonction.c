@@ -87,47 +87,39 @@ void Deuxieme_version(Position * paquet,const char* nom_fichier)
     int temps_ecoule;
 
     int *tab_position = malloc(LONGUEUR_CABLE * sizeof(int)); //utilisation d'une allocation dynamique pour gérer une grande quantité de valeur
-    int x,s;
     int nbre_alertes = 0;
     int min,max;
 
 
-    // On initialise les valeurs d'un tableau alerte à une valeur particulière ici 2
-    for (int a =0; a < LONGUEUR_CABLE; a ++)
-        tab_position[a]=2;
 
-
-    for(int i =0; i < NOMBRE_DEFORMATIONS; i++) // On parcourt une première fois le tableau
+    for(int i =0; i < LONGUEUR_CABLE; i++) // On parcourt une première fois le tableau
     {
-        if ((tab_position[i]!=1)&&(tab_position[i] != 0)){ // Pour éviter de refaire le calcul si il y a plusieurs deformations au même endroit,
-                                              // si la case associé à deja une valeur on ne rentre pas dans la boucle.
 
-            x = paquet [i]; // La variable x prend une déformation
+        // On définit un intervalle de valeurs dans lequel les déformations compteront.
 
-            // On définit un intervalle de valeurs dans lequel les déformations compteront.
+        if (i > (LONGUEUR_CABLE - DIST_MAX_VOISIN - 1))
+            max = LONGUEUR_CABLE ;  // car les cases vont de 0 à LONGUEUR_CABLE-1 soit LONGUEUR_CABLE case
+        else
+            max = i + DIST_MAX_VOISIN;
 
-            if ( x > (LONGUEUR_CABLE - DIST_MAX_VOISIN - 1))
-                max = LONGUEUR_CABLE ;  // car les cases vont de 0 à long LONGUEUR_CABLE-1 soit LONGUEUR_CABLE case
-            else
-                max = x + DIST_MAX_VOISIN;
+        if ( i + 1 < DIST_MAX_VOISIN)   //pour éviter que le min soit au en dessous de 0 car impossible
+            min = 0;
+        else
+            min = i - DIST_MAX_VOISIN;
 
-            if ( x <DIST_MAX_VOISIN)   //pour éviter que le min soit au en dessous de 0 car impossible
-                min =0;
-            else
-                min = x - DIST_MAX_VOISIN;
+        int s = 0;
 
-            for (int j =0; j < NOMBRE_DEFORMATIONS; j++) // On parcourt une seconde fois le tableau
-            {
-                if ((paquet[j]>=min)&&(paquet[j]<=max)){ // Si une déformation se situe dans l'intervalle défini,
+        for (int j =0; j < NOMBRE_DEFORMATIONS; j++) // On parcourt le paquet
+        {
+            if ((paquet[j] >= min) && (paquet[j] <= max))
+            { // Si une déformation se situe dans l'intervalle défini,
 
-                    s=s+1;
-                    if (s>=SEUIL_ALERTE)
-                        tab_position[i]=1;
-                    else
-                        tab_position[i]=0;
-                }
+                s = s+1 ;
+                if (s >= SEUIL_ALERTE)
+                    tab_position[i] = 1 ;
+                else
+                    tab_position[i] = 0 ;
             }
-
         }
 
     }
@@ -137,7 +129,7 @@ void Deuxieme_version(Position * paquet,const char* nom_fichier)
 
     for(int k =0; k < LONGUEUR_CABLE; k++)
     {
-        if (tab_position[k] ==1 )
+        if (tab_position[k] == 1 )
         {
             fprintf(file,"Alerte : Trop de déformations au point %i\n",k );
             nbre_alertes ++;
@@ -150,7 +142,7 @@ void Deuxieme_version(Position * paquet,const char* nom_fichier)
 
     printf("termine\n");
 
-    temps_ecoule = relever_chronometre_ms(); //on recuperrer le temps écoulé pour cette version
+    temps_ecoule = relever_chronometre_ms(); //on recupere le temps écoulé pour cette version
     printf("Temps ecoule deuxieme version : %i ms.\n", temps_ecoule);
 }
 
