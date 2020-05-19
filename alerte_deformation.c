@@ -18,7 +18,7 @@ int main()
 {
     int choix =0;
     register int nombre_positions = LONGUEUR_CABLE/PRECISION;
-    Simulation simulation = BIMODALE; //type de loi suivie pour la simulation
+    Simulation simulation = UNIFORME; //type de loi suivie pour la simulation
 
     /** simulation des déformation **/
     register Position* paquet = simuler_deformations(nombre_positions,NOMBRE_DEFORMATIONS, simulation);
