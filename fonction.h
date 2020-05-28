@@ -2,11 +2,11 @@
 #define FONCTION_H_INCLUDED
 
 #include "rapport_deformations.h"
-#include <time.h> /* pour la mesure du temps de calcul */
+#include <time.h>
 
 /** mesure du temps de calcul **/
 void redemarrer_chronometre();
-int relever_chronometre_ms();  /* en millisecondes */
+int relever_chronometre_ms();
 
 /** fonctions calculs des alertes **/
 void Premiere_version(Position * paquet,const char* nom_fichier);

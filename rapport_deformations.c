@@ -18,14 +18,14 @@ double distribution_triangulaire()
     return valeur/(double) RAND_MAX;
 }
 
-/* tire aléatoirement une position selon une distribution triangulaire */
+/** tire aléatoirement une position selon une distribution triangulaire */
 Position position_distr_triang(Position centre, int largeur)
 {
     return centre - largeur/2 + (int) (largeur*distribution_triangulaire());
 }
 
-/* transformation d'un tableau de positions tirées uniformément en une distribution quasi-monotone */
-/* fonction auxiliaire : ordonne les positions autour d'une valeur pivot */
+/** transformation d'un tableau de positions tirées uniformément en une distribution quasi-monotone */
+/** fonction auxiliaire : ordonne les positions autour d'une valeur pivot */
 int distribuer_pivot(Position* positions, int n)
 {
     Position pivot = positions[0];
@@ -52,7 +52,7 @@ int distribuer_pivot(Position* positions, int n)
     return i;
 }
 
-/* transformation : tri partiel */
+/** transformation : tri partiel */
 void transf_quasi_monotone(Position* deformations, int nombre_deformations,int arret)
 {
     if (nombre_deformations < arret){ return; }
